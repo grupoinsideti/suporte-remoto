@@ -40,4 +40,24 @@ cp "$ICONES/icone-256.png" res/128x128@2x.png
 cp "$ICONES/icone-512.png" res/icon.png
 if [[ -f flutter/assets/icon.png ]]; then cp "$ICONES/icone-512.png" flutter/assets/icon.png; fi
 
+# Logo no topo do painel esquerdo (o RustDesk procura assets/logo_light.png, logo_dark.png e logo.png; máx. 300x60).
+cp "$ICONES/logo.png" flutter/assets/logo_light.png
+cp "$ICONES/logo-branca.png" flutter/assets/logo_dark.png
+cp "$ICONES/logo.png" flutter/assets/logo.png
+
+# Cores da marca: destaque, botões e ID no vermelho Inside-TI; no tema escuro, fundos azul-marinho no lugar do cinza.
+TEMA=flutter/lib/common.dart
+sed -i -E \
+  -e 's/(static const Color accent = )Color\(0xFF0071FF\)/\1Color(0xFFE5304F)/' \
+  -e 's/(static const Color accent50 = )Color\(0x770071FF\)/\1Color(0x77E5304F)/' \
+  -e 's/(static const Color accent80 = )Color\(0xAA0071FF\)/\1Color(0xAAE5304F)/' \
+  -e 's/(static const Color idColor = )Color\(0xFF00B6F0\)/\1Color(0xFFE5304F)/' \
+  -e 's/(static const Color button = )Color\(0xFF2C8CFF\)/\1Color(0xFFE5304F)/' \
+  -e 's/Color\(0xFF18191E\)/Color(0xFF0F1729)/g' \
+  -e 's/Color\(0xFF24252B\)/Color(0xFF162036)/g' \
+  -e 's/Color\(0xFF121212\)/Color(0xFF0B1220)/g' \
+  "$TEMA"
+grep -q "accent = Color(0xFFE5304F)" "$TEMA" && grep -q "Color(0xFF0F1729)" "$TEMA" \
+  || { echo "Personalização das cores não aplicou (o RustDesk mudou?)." >&2; exit 1; }
+
 echo "Personalização Inside-TI aplicada: ${EXIBIDO} → ${SERVIDOR}"
