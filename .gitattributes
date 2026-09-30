@@ -1,1 +1,4 @@
 * text=auto
+
+# Suporte Remoto Inside-TI: scripts sempre com quebra de linha do Linux (o runner Windows usa bash)
+inside-ti/*.sh text eol=lf
